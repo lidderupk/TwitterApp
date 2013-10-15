@@ -27,11 +27,11 @@ public class RestClient extends OAuthBaseClient {
 
     // this
 
-    public static final String REST_URL = "http://api.twitter.com";
+    public static final String REST_URL = "https://api.twitter.com/1.1";
 
-    public static final String REST_CONSUMER_KEY = "SOkJb87Q65bquYsUyK4q1A";
+    public static final String REST_CONSUMER_KEY = "6lWNZWou6pRJaIlkeiEGQg";
 
-    public static final String REST_CONSUMER_SECRET = "5RrmrddFaMSly0LqvQi8t95rqhXA3R7b8U4CcBYwc";
+    public static final String REST_CONSUMER_SECRET = "c1cLEA6bmmQtOzPxN34Jl9SNbm4JaMfBU88Lvp7ZIWU";
 
     public static final String REST_CALLBACK_URL = "oauth://bindaasTwitterapp";
 
@@ -50,11 +50,26 @@ public class RestClient extends OAuthBaseClient {
         client.get(apiUrl, params, handler);
     }
 
-    public void getHomeTimeline(int page, AsyncHttpResponseHandler handler) {
+    public void getHomeTimeline(AsyncHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/home_timeline.json");
-        RequestParams params = new RequestParams();
-        params.put("page", String.valueOf(page));
-        getClient().get(apiUrl, params, handler);
+        // RequestParams params = new RequestParams();
+        // params.put("page", String.valueOf(page));
+        // getClient().get(apiUrl, params, handler);
+        getClient().get(apiUrl, handler);
+    }
+
+    public void getMentions(AsyncHttpResponseHandler handler) {
+        // Log.d(tag, "getHomeTimeLine; isFirstTimeCall: " + isFirstTimeCall);
+        String url = getApiUrl("statuses/mentions_timeline.json");
+        // RequestParams params = new RequestParams("count",
+        // INITIAL_TWEET_COUNT);
+        // if (!isFirstTimeCall) {
+        // Log.d(tag, "calling again");
+        // params.put("max_id", String.valueOf(maxId));
+        // }
+
+        // client.get(url, params, handler);
+        client.get(url, handler);
     }
 
     public void postTweet(String body, AsyncHttpResponseHandler handler) {

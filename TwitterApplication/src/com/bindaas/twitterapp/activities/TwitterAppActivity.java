@@ -2,61 +2,63 @@
 package com.bindaas.twitterapp.activities;
 
 import com.bindaas.twitterapp.R;
-import com.bindaas.twitterapp.models.Tweet;
-import com.bindaas.twitterapp.restclient.RestClientApp;
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.bindaas.twitterapp.fragments.HomeTimeLineFragment;
+import com.bindaas.twitterapp.fragments.MentionsFragment;
 
-import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectView;
+import roboguice.activity.RoboFragmentActivity;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.ActionBar.TabListener;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class TwitterAppActivity extends RoboActivity {
+public class TwitterAppActivity extends RoboFragmentActivity implements TabListener {
 
     private final static String tag = "com.bindaas.twitterapp.activities.TwitterAppActivity";
-
-    @InjectView(R.id.lvTweets)
-    ListView lvTweets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_twitter_app);
-
-        setupViews();
+        setupNavigationTabs();
     }
 
-    private void setupViews() {
-        RestClientApp.getRestClient().getHomeTimeline(0, new AsyncHttpResponseHandler() {
+    private void setupNavigationTabs() {
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(true);
+        Tab tabHome = actionBar.newTab().setText("Home").setTag("HomeTimeLineFragment")
+                .setIcon(R.drawable.ic_home).setTabListener(this);
+        Tab tabMention = actionBar.newTab().setText("Mention").setTag("MentionTimeLineFragment")
+                .setIcon(R.drawable.ic_mention).setTabListener(this);
+        actionBar.addTab(tabHome);
+        actionBar.addTab(tabMention);
+        actionBar.selectTab(tabHome);
 
-            @Override
-            public void onSuccess(int arg0, String arg1) {
-                super.onSuccess(arg0, arg1);
-                Log.d(tag, "successful");
-            }
-
-            @Override
-            public void onFailure(Throwable exception, String arg1) {
-                super.onFailure(exception, arg1);
-                Log.d(tag, exception.getMessage());
-            }
-        });
-        List<Tweet> tweets = new ArrayList<Tweet>();
-        lvTweets.setAdapter(new ArrayAdapter<Tweet>(getBaseContext(), R.layout.item_tweet, tweets));
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.twitter_app, menu);
-        return true;
+    public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        android.support.v4.app.FragmentTransaction fts = getSupportFragmentManager()
+                .beginTransaction();
+
+        if (tab.getTag().equals("HomeTimeLineFragment")) {
+            // set the fragment to home timeline
+            fts.replace(R.id.frameContainer, new HomeTimeLineFragment());
+        } else {
+            // set the fragment to mention timeline
+            fts.replace(R.id.frameContainer, new MentionsFragment());
+        }
+
+        fts.commit();
     }
 
+    @Override
+    public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+    }
+
+    @Override
+    public void onTabReselected(Tab tab, FragmentTransaction ft) {
+    }
 }

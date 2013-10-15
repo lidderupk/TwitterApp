@@ -4,12 +4,22 @@
     android:layout_height="match_parent"
     tools:context=".TwitterAppActivity" >
 
-    <ListView
-        android:id="@+id/lvTweets"
+    <!-- <fragment
+        android:id="@+id/fragment1"
+        android:name="com.bindaas.twitterapp.fragments.MentionsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        tools:layout="@layout/fragments_tweets_list" /> -->
+
+    <FrameLayout
+        android:id="@+id/frameContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" >
-    </ListView>
+
+    </FrameLayout>
 
 </RelativeLayout>
